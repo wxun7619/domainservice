@@ -1,0 +1,35 @@
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+group 'com.lonntec'
+version buildVersion
+
+sourceCompatibility = 1.8
+
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+    repositories {
+        maven { url 'http://maven.mipesoft.com:8081/content/groups/public' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    }
+}
+
+repositories {
+    maven { url 'http://maven.mipesoft.com:8081/content/groups/public' }
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
+    compile("com.alibaba:fastjson:$fastjsonVersion")
+    compile("mysql:mysql-connector-java:$mysqlconnectorVersion")
+    compile("com.lonntec:framework:$microServiceCoreVersion")
+
+    testCompile("junit:junit:$junitVersion")
+    testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+    testCompile("com.h2database:h2:$h2Version")
+}

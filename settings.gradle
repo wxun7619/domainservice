@@ -1,0 +1,4 @@
+rootProject.name = 'domainservice'
+include 'src'
+findProject(':src')?.name='domainservice'
+
