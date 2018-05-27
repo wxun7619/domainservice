@@ -85,8 +85,24 @@ public class DomainControllerUnitTest {
         userNotAdmin.setPassword("123456");
         userRepository.save(userNotAdmin);
 
-        //admin创建企业域
-        for(int i=1;i<101;i++){
+        //admin创建企业域 已开通suf
+        for(int i=1;i<51;i++){
+            JSONObject object=new JSONObject();
+            String token=adminlogin();
+            Domain domain=new Domain();
+            domain.setRowId("1000"+i);
+            domain.setDomainName("domainByAdmin"+i);
+            domain.setDomainShortName("dbAdmin"+i);
+            domain.setAddress("桃花源");
+            domain.setLinkMan("欧阳修");
+            domain.setLinkManMobile("1000"+i);
+            domain.setIsActiveSuf(true);
+            domain.setIsEnable(false);
+            domain.setOwnerUser(userNotAdmin);
+            domainRepository.save(domain);
+        }
+        //admin创建企业域 未开通suf
+        for(int i=51;i<102;i++){
             JSONObject object=new JSONObject();
             String token=adminlogin();
             Domain domain=new Domain();
@@ -101,8 +117,24 @@ public class DomainControllerUnitTest {
             domain.setOwnerUser(userNotAdmin);
             domainRepository.save(domain);
         }
-        //非admin创建企业域
-        for(int i=1;i<101;i++){
+        //非admin创建企业域 已开通suf
+        for(int i=1;i<51;i++){
+            JSONObject object=new JSONObject();
+            String token=userlogin();
+            Domain domain=new Domain();
+            domain.setRowId("2000"+i);
+            domain.setDomainName("domainByUser"+i);
+            domain.setDomainShortName("dbUser"+i);
+            domain.setAddress("乌托邦");
+            domain.setLinkMan("晋武陵人");
+            domain.setLinkManMobile("2000"+i);
+            domain.setIsActiveSuf(true);
+            domain.setIsEnable(false);
+            domain.setOwnerUser(userIsAdmin);
+            domainRepository.save(domain);
+        }
+        //非admin创建企业域 未开通suf
+        for(int i=51;i<102;i++){
             JSONObject object=new JSONObject();
             String token=userlogin();
             Domain domain=new Domain();
@@ -167,7 +199,7 @@ public class DomainControllerUnitTest {
         String token=adminlogin();
         //获取企业列表
         String domainList=mockMvc.perform(
-                get("/domain/list?keyword=&page=8&size=25")
+                get("/domain/list?keyword=&page=9&size=25")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
         Result result1 = JSON.parseObject(domainList, Result.class);
@@ -178,11 +210,10 @@ public class DomainControllerUnitTest {
                 get("/domain/listcount?keyword=")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-
         Result result2 = JSON.parseObject(domainCount, Result.class);
         Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
         Integer count= (Integer)result2.getResult();
-        int lastPageCount=count-25*7;
+        int lastPageCount=count-25*8;
         Assert.assertEquals(array.size(),lastPageCount);
     }
 
@@ -274,7 +305,7 @@ public class DomainControllerUnitTest {
         String token=userlogin();
         //获取企业列表
         String domainList=mockMvc.perform(
-                get("/domain/list?keyword=&page=4&size=25")
+                get("/domain/list?keyword=&page=5&size=25")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
         Result result1 = JSON.parseObject(domainList, Result.class);
@@ -289,7 +320,7 @@ public class DomainControllerUnitTest {
         Result result2 = JSON.parseObject(domainCount, Result.class);
         Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
         Integer count= (Integer)result2.getResult();
-        int lastPageCount=count-25*3;
+        int lastPageCount=count-25*4;
         Assert.assertEquals(array.size(),lastPageCount);
     }
         //根据关键字查询列表与数量是否相等（非管理员）
@@ -721,36 +752,216 @@ public class DomainControllerUnitTest {
      *获取已/未开通suf企业列表
      */
     //用户登录过期
-    //已开通suf列表，数量总数是否相等（管理员）
+    //已开通suf列表第一页（管理员）
     @Test
-    public void test_activesuflist_case1() throws Exception {
+    public void test_activesuflistWithAdmin_case2() throws Exception {
         String token=adminlogin();
-        String activeSufList=mockMvc.perform(
-                get("/domain/activesuflist?keword=&page=1&size=300")
+        String activesuflistWithAdmin=mockMvc.perform(
+                get("/domain/activesuflist?keyword=&page=1&size=25")
                 .header("Suf-Token",token))
                 .andReturn().getResponse().getContentAsString();
-        Result result=JSON.parseObject(activeSufList,Result.class);
+        Result result=JSON.parseObject(activesuflistWithAdmin,Result.class);
         Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
         JSONArray jsonArray=(JSONArray)result.getResult();
-        
+        Assert.assertEquals(jsonArray.size(),25);
     }
-    //最后一页列表与数量是否相等（已开通）（管理员）
-    //根据关键字查询列表与数量是否相等（已开通）（管理员）
+    //最后一页列表数量（管理员）
+    @Test
+    public void test_activesuflistWithAdmin_case3() throws Exception {
+        String token=adminlogin();
+        String activesuflistWithAdmin=mockMvc.perform(
+                get("/domain/activesuflist?keyword=&page=4&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(activesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),25);
+    }
+    //根据关键字查询列表数量（已开通）（管理员）
+    @Test
+    public void test_activesuflistWithAdmin_case4() throws Exception {
+        String token=adminlogin();
+        String activesuflistWithAdmin=mockMvc.perform(
+                get("/domain/activesuflist?keyword=User&page=2&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(activesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),25);
+    }
     //关键字不存在（已开通）（管理员）
+    @Test
+    public void test_activesuflistWithAdmin_case5() throws Exception {
+        String token=adminlogin();
+        String activesuflistWithAdmin=mockMvc.perform(
+                get("/domain/activesuflist?keyword=nothing&page=1&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(activesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),0);
+    }
     //未开通suf列表，数量总数是否相等（管理员）
+    @Test
+    public void test_unactivesuflistWithAdmin_case1() throws Exception {
+        String token=adminlogin();
+        String unactivesuflistWithAdmin=mockMvc.perform(
+                get("/domain/unactivesuflist?keyword=&page=1&size=200")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(unactivesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult(); 
+        Assert.assertEquals(jsonArray.size(),102);
+    }
     //最后一页列表与数量是否相等（未开通）（管理员）
+    @Test
+    public void test_unactivesuflistWithAdmin_case2() throws Exception {
+        String token=adminlogin();
+        String unactivesuflistWithAdmin=mockMvc.perform(
+                get("/domain/unactivesuflist?keyword=&page=5&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(unactivesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),2);
+    }
     //根据关键字查询列表与数量是否相等（未开通）（管理员）
+    @Test
+    public void test_unactivesuflistWithAdmin_case3() throws Exception {
+        String token=adminlogin();
+        String unactivesuflistWithAdmin=mockMvc.perform(
+                get("/domain/unactivesuflist?keyword=User&page=1&size=100")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(unactivesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),51);
+    }
     //关键字不存在（未开通）（管理员）
 
-    //已开通suf列表，数量总数是否相等（非管理员）
+    @Test
+    public void test_unactivesuflistWithAdmin_case4() throws Exception {
+        String token=adminlogin();
+        String unactivesuflistWithAdmin=mockMvc.perform(
+                get("/domain/unactivesuflist?keyword=nothing&page=1&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(unactivesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),0);
+    }
+    //已开通suf列表数量第一页（非管理员）
+    @Test
+    public void test_activesuflistWithUser_case1() throws Exception {
+        String token=userlogin();
+        String activesuflistWithAdmin=mockMvc.perform(
+                get("/domain/activesuflist?keyword=&page=1&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(activesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),25);
+    }
     //最后一页列表与数量是否相等（已开通）（非管理员）
+    @Test
+    public void test_activesuflistWithUser_case2() throws Exception {
+        String token=userlogin();
+        String activesuflistWithAdmin=mockMvc.perform(
+                get("/domain/activesuflist?keyword=&page=2&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(activesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),25);
+    }
     //根据关键字查询列表与数量是否相等（已开通）（非管理员）
+    @Test
+    public void test_activesuflistWithUser_case3() throws Exception {
+        String token=userlogin();
+        String activesuflistWithAdmin=mockMvc.perform(
+                get("/domain/activesuflist?keyword=User&page=2&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(activesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),25);
+    }
     //关键字不存在（已开通）（非管理员）
+    @Test
+    public void test_activesuflistWithUser_case4() throws Exception {
+        String token=userlogin();
+        String activesuflistWithAdmin=mockMvc.perform(
+                get("/domain/activesuflist?keyword=nothing&page=1&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(activesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),0);
+    }
     //未开通suf列表，数量总数是否相等（非管理员）
+    @Test
+    public void test_unactivesuflistWithUser_case1() throws Exception {
+        String token=userlogin();
+        String unactivesuflistWithAdmin=mockMvc.perform(
+                get("/domain/unactivesuflist?keyword=&page=1&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(unactivesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),25);
+    }
     //最后一页列表与数量是否相等（未开通）（非管理员）
+    @Test
+    public void test_unactivesuflistWithUser_case2() throws Exception {
+        String token=userlogin();
+        String unactivesuflistWithAdmin=mockMvc.perform(
+                get("/domain/unactivesuflist?keyword=&page=3&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(unactivesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),1);
+    }
     //根据关键字查询列表与数量是否相等（未开通）（非管理员）
+    @Test
+    public void test_unactivesuflistWithUser_case3() throws Exception {
+        String token=userlogin();
+        String unactivesuflistWithAdmin=mockMvc.perform(
+                get("/domain/unactivesuflist?keyword=User&page=3&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(unactivesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),1);
+    }
     //关键字不存在（未开通）（非管理员）
-
+    //根据关键字查询列表与数量是否相等（未开通）（非管理员）
+    @Test
+    public void test_unactivesuflistWithUser_case4() throws Exception {
+        String token=userlogin();
+        String unactivesuflistWithAdmin=mockMvc.perform(
+                get("/domain/unactivesuflist?keyword=nothing&page=1&size=25")
+                        .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(unactivesuflistWithAdmin,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        Assert.assertEquals(jsonArray.size(),0);
+    }
     //管理员登录
     private  String adminlogin() throws Exception {
         JSONObject requestBody = new JSONObject();
