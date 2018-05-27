@@ -131,20 +131,20 @@ public class DomainControllerUnitTest {
      public void test_getdomainlistbyadmin_case1() throws Exception {
          String token=adminlogin();
          //获取企业列表
-         String rellist=mockMvc.perform(
+         String domainList=mockMvc.perform(
                  get("/domain/list?keyword=&page=1&size=300")
                  .header("Suf-Token", token))
                  .andReturn().getResponse().getContentAsString();
-         Result result1 = JSON.parseObject(rellist, Result.class);
+         Result result1 = JSON.parseObject(domainList, Result.class);
          Assert.assertEquals(result1.getStateCode(), SystemStateCode.OK.getCode());
          JSONArray array = (JSONArray) result1.getResult();
          //获取企业列表总数
-         String relcount=mockMvc.perform(
+         String domainCount=mockMvc.perform(
                  get("/domain/listcount?keyword=")
                          .header("Suf-Token", token))
                  .andReturn().getResponse().getContentAsString();
 
-         Result result2 = JSON.parseObject(relcount, Result.class);
+         Result result2 = JSON.parseObject(domainCount, Result.class);
          Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
          Integer count= (Integer)result2.getResult();
          Assert.assertEquals(array.size(),count.intValue());
@@ -152,11 +152,11 @@ public class DomainControllerUnitTest {
     @Test       //第一页（管理员）
     public void test_getdomainlistbyadmin_case2() throws Exception {
         String token=adminlogin();
-        String rel=mockMvc.perform(
+        String domainList=mockMvc.perform(
                 get("/domain/list?keyword=&page=1&size=25")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-        Result result = JSON.parseObject(rel, Result.class);
+        Result result = JSON.parseObject(domainList, Result.class);
         Assert.assertEquals(result.getStateCode(), SystemStateCode.OK.getCode());
         JSONArray array = (JSONArray) result.getResult();
         Assert.assertEquals(array.size(), 25);
@@ -166,20 +166,20 @@ public class DomainControllerUnitTest {
     public void test_getdomainlistbyadmin_case3() throws Exception {
         String token=adminlogin();
         //获取企业列表
-        String rellist=mockMvc.perform(
+        String domainList=mockMvc.perform(
                 get("/domain/list?keyword=&page=8&size=25")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-        Result result1 = JSON.parseObject(rellist, Result.class);
+        Result result1 = JSON.parseObject(domainList, Result.class);
         Assert.assertEquals(result1.getStateCode(), SystemStateCode.OK.getCode());
         JSONArray array = (JSONArray) result1.getResult();
         //获取企业列表总数
-        String relcount=mockMvc.perform(
+        String domainCount=mockMvc.perform(
                 get("/domain/listcount?keyword=")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
 
-        Result result2 = JSON.parseObject(relcount, Result.class);
+        Result result2 = JSON.parseObject(domainCount, Result.class);
         Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
         Integer count= (Integer)result2.getResult();
         int lastPageCount=count-25*7;
@@ -190,20 +190,20 @@ public class DomainControllerUnitTest {
     public void test_getdomainlistbyadmin_case4() throws Exception{
         String token=adminlogin();
         //获取企业列表
-        String rellist=mockMvc.perform(
+        String domainList=mockMvc.perform(
                 get("/domain/list?keyword=Admin&page=1&size=300")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-        Result result1 = JSON.parseObject(rellist, Result.class);
+        Result result1 = JSON.parseObject(domainList, Result.class);
         Assert.assertEquals(result1.getStateCode(), SystemStateCode.OK.getCode());
         JSONArray array = (JSONArray) result1.getResult();
         //获取企业列表总数
-        String relcount=mockMvc.perform(
+        String domainCount=mockMvc.perform(
                 get("/domain/listcount?keyword=Admin")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
 
-        Result result2 = JSON.parseObject(relcount, Result.class);
+        Result result2 = JSON.parseObject(domainCount, Result.class);
         Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
         Integer count= (Integer)result2.getResult();
         Assert.assertEquals(array.size(),count.intValue());
@@ -213,20 +213,20 @@ public class DomainControllerUnitTest {
     public void test_getdomainlistbyadmin_case5() throws Exception{
         String token=adminlogin();
         //获取企业列表
-        String rellist=mockMvc.perform(
+        String domainList=mockMvc.perform(
                 get("/domain/list?keyword=nothing&page=1&size=300")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-        Result result1 = JSON.parseObject(rellist, Result.class);
+        Result result1 = JSON.parseObject(domainList, Result.class);
         Assert.assertEquals(result1.getStateCode(), SystemStateCode.OK.getCode());
         JSONArray array = (JSONArray) result1.getResult();
         //获取企业列表总数
-        String relcount=mockMvc.perform(
+        String domainCount=mockMvc.perform(
                 get("/domain/listcount?keyword=nothing")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
 
-        Result result2 = JSON.parseObject(relcount, Result.class);
+        Result result2 = JSON.parseObject(domainCount, Result.class);
         Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
         Integer count= (Integer)result2.getResult();
         Assert.assertEquals(array.size()==0,count.intValue()==0);
@@ -236,20 +236,20 @@ public class DomainControllerUnitTest {
     public void test_getdomainlistbyTestUser_case1() throws Exception {
          String token=userlogin();
         //获取企业列表
-        String rellist=mockMvc.perform(
+        String domainList=mockMvc.perform(
                 get("/domain/list?keyword=&page=1&size=300")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-        Result result1 = JSON.parseObject(rellist, Result.class);
+        Result result1 = JSON.parseObject(domainList, Result.class);
         Assert.assertEquals(result1.getStateCode(), SystemStateCode.OK.getCode());
         JSONArray array = (JSONArray) result1.getResult();
         //获取企业列表总数
-        String relcount=mockMvc.perform(
+        String domainCount=mockMvc.perform(
                 get("/domain/listcount?keyword=")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
 
-        Result result2 = JSON.parseObject(relcount, Result.class);
+        Result result2 = JSON.parseObject(domainCount, Result.class);
         Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
         Integer count= (Integer)result2.getResult();
         System.out.println(count);
@@ -259,11 +259,11 @@ public class DomainControllerUnitTest {
     @Test
     public void test_getdomainlistbyTestUser_case2() throws Exception {
         String token=userlogin();
-        String rel=mockMvc.perform(
+        String domainList=mockMvc.perform(
                 get("/domain/list?keyword=&page=1&size=25")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-        Result result = JSON.parseObject(rel, Result.class);
+        Result result = JSON.parseObject(domainList, Result.class);
         Assert.assertEquals(result.getStateCode(), SystemStateCode.OK.getCode());
         JSONArray array = (JSONArray) result.getResult();
         Assert.assertEquals(array.size(), 25);
@@ -273,20 +273,20 @@ public class DomainControllerUnitTest {
     public void test_getdomainlistbyTestUser_case3() throws Exception {
         String token=userlogin();
         //获取企业列表
-        String rellist=mockMvc.perform(
+        String domainList=mockMvc.perform(
                 get("/domain/list?keyword=&page=4&size=25")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-        Result result1 = JSON.parseObject(rellist, Result.class);
+        Result result1 = JSON.parseObject(domainList, Result.class);
         Assert.assertEquals(result1.getStateCode(), SystemStateCode.OK.getCode());
         JSONArray array = (JSONArray) result1.getResult();
         //获取企业列表总数
-        String relcount=mockMvc.perform(
+        String domainCount=mockMvc.perform(
                 get("/domain/listcount?keyword=")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
 
-        Result result2 = JSON.parseObject(relcount, Result.class);
+        Result result2 = JSON.parseObject(domainCount, Result.class);
         Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
         Integer count= (Integer)result2.getResult();
         int lastPageCount=count-25*3;
@@ -297,20 +297,20 @@ public class DomainControllerUnitTest {
     public void test_getdomainlistbyTestUser_case4() throws Exception{
         String token=userlogin();
         //获取企业列表
-        String rellist=mockMvc.perform(
+        String domainList=mockMvc.perform(
                 get("/domain/list?keyword=Admin&page=1&size=300")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-        Result result1 = JSON.parseObject(rellist, Result.class);
+        Result result1 = JSON.parseObject(domainList, Result.class);
         Assert.assertEquals(result1.getStateCode(), SystemStateCode.OK.getCode());
         JSONArray array = (JSONArray) result1.getResult();
         //获取企业列表总数
-        String relcount=mockMvc.perform(
+        String domainCount=mockMvc.perform(
                 get("/domain/listcount?keyword=Admin")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
 
-        Result result2 = JSON.parseObject(relcount, Result.class);
+        Result result2 = JSON.parseObject(domainCount, Result.class);
         Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
         Integer count= (Integer)result2.getResult();
         Assert.assertEquals(array.size(),count.intValue());
@@ -320,21 +320,21 @@ public class DomainControllerUnitTest {
     public void test_getdomainlistbyTestUser_case5() throws Exception{
         String token=userlogin();
         //获取企业列表
-        String rellist=mockMvc.perform(
+        String domainList=mockMvc.perform(
                 get("/domain/list?keyword=nothing&page=1&size=300")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
-        Result result1 = JSON.parseObject(rellist, Result.class);
+        Result result1 = JSON.parseObject(domainList, Result.class);
         Assert.assertEquals(result1.getStateCode(), SystemStateCode.OK.getCode());
         JSONArray array = (JSONArray) result1.getResult();
         //获取企业列表总数
-        String relcount=mockMvc.perform(
+        String domainCount=mockMvc.perform(
                 get("/domain/listcount?keyword=nothing")
                         .header("Suf-Token", token))
                 .andReturn().getResponse().getContentAsString();
 
-        Result result2 = JSON.parseObject(relcount, Result.class);
+        Result result2 = JSON.parseObject(domainCount, Result.class);
         Assert.assertEquals(result2.getStateCode(), SystemStateCode.OK.getCode());
         Integer count= (Integer)result2.getResult();
         Assert.assertEquals(array.size()==0,count.intValue()==0);
@@ -609,11 +609,31 @@ public class DomainControllerUnitTest {
         Assert.assertEquals(result.getStateCode(),DomainSystemStateCode.IsEnable_IsEmpty.getCode());
     }
 
-    //非管理员禁用自己创建的企业域
+    //非管理员启用自己创建的企业域
     @Test
     public void test_setenabledomain_case3() throws Exception {
         String token=userlogin();
-        JSONObject jsondomain=getJSONDomain();
+        JSONObject jsondomain=new JSONObject();
+        jsondomain.put("rowId","20001");
+        jsondomain.put("isEnable",true);
+        String responseBody=mockMvc.perform(
+                post("/domain/setenable")
+                        .header("Suf-Token",token)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(jsondomain.toJSONString()))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(responseBody,Result.class);
+        Domain domain=(Domain) result.getResult();
+        Boolean isEnable=domain.getIsEnable();
+        Assert.assertEquals(isEnable,true);
+    }
+    //管理员启用他人创建的企业域
+    @Test
+    public void test_setenabledomain_case4() throws Exception {
+        String token=adminlogin();
+
+        JSONObject jsondomain=new JSONObject();
+        jsondomain.put("rowId","20001");
         jsondomain.put("isEnable",false);
         String responseBody=mockMvc.perform(
                 post("/domain/setenable")
@@ -624,24 +644,96 @@ public class DomainControllerUnitTest {
         Result result=JSON.parseObject(responseBody,Result.class);
         Domain domain=(Domain) result.getResult();
         Boolean isEnable=domain.getIsEnable();
-        Assert.assertEquals(isEnable,false);
+        Assert.assertEquals(isEnable,true);
     }
-    //管理员禁用他人创建的企业域
     /**
      *
      *企业域实施人员变更
      */
     //成功操作
+    @Test
+    public void test_changeuser_case1() throws Exception {
+        String token=adminlogin();
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("domainId","20001");
+        jsonObject.put("newOwnerId","18052501");
+        String responseBody=mockMvc.perform(
+                post("/domain/changeuser")
+                    .header("Suf-Token",token)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(jsonObject.toJSONString()))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(responseBody,Result.class);
+        JSONObject domain=(JSONObject)result.getResult();
+        Assert.assertEquals(domain.getString("ownerId"),"18052501");
+    }
     //用户登录过期
     //企业域不存在
+    @Test
+    public void test_changeuser_case3() throws Exception {
+        String token=adminlogin();
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("domainId","200011");
+        jsonObject.put("newOwnerId","18052501");
+        String responseBody=mockMvc.perform(
+                post("/domain/changeuser")
+                        .header("Suf-Token",token)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(jsonObject.toJSONString()))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(responseBody,Result.class);
+        Assert.assertEquals(result.getStateCode(),DomainSystemStateCode.Domain_IsNotExist);
+    }
     //要变更的实施人员不存在
+    @Test
+    public void test_changeuser_case4() throws Exception {
+        String token=adminlogin();
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("domainId","20001");
+        jsonObject.put("newOwnerId","18052503");
+        String responseBody=mockMvc.perform(
+                post("/domain/changeuser")
+                        .header("Suf-Token",token)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(jsonObject.toJSONString()))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(responseBody,Result.class);
+        Assert.assertEquals(result.getStateCode(),DomainSystemStateCode.NewOwnerUserId_IsEmpty);
+    }
     //操作用户非管理员
+    @Test
+    public void test_changeuser_case5() throws Exception {
+        String token=adminlogin();
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("domainId","20001");
+        jsonObject.put("newOwnerId","18052502");
+        String responseBody=mockMvc.perform(
+                post("/domain/changeuser")
+                        .header("Suf-Token",token)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(jsonObject.toJSONString()))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(responseBody,Result.class);
+        Assert.assertEquals(result.getStateCode(),DomainSystemStateCode.No_Permissions);
+    }
     /**
      *
      *获取已/未开通suf企业列表
      */
     //用户登录过期
     //已开通suf列表，数量总数是否相等（管理员）
+    @Test
+    public void test_activesuflist_case1() throws Exception {
+        String token=adminlogin();
+        String activeSufList=mockMvc.perform(
+                get("/domain/activesuflist?keword=&page=1&size=300")
+                .header("Suf-Token",token))
+                .andReturn().getResponse().getContentAsString();
+        Result result=JSON.parseObject(activeSufList,Result.class);
+        Assert.assertEquals(result.getStateCode(),SystemStateCode.OK.getCode());
+        JSONArray jsonArray=(JSONArray)result.getResult();
+        
+    }
     //最后一页列表与数量是否相等（已开通）（管理员）
     //根据关键字查询列表与数量是否相等（已开通）（管理员）
     //关键字不存在（已开通）（管理员）
